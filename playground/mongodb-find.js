@@ -7,7 +7,10 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, client) => {
   }
   console.log('Connected to MongoDB server');
   const db = client.db('TodoApp')
-
+  
+  // find method can find a single document with a given argument
+  // toArray will turn the documents into a collection inside an array
+  
   // db.collection('Todos').find({
   //   _id: new ObjectID('5b90a968c06d4e15c1769ce6')
   // }).toArray().then((docs) => {
