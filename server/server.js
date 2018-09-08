@@ -64,12 +64,12 @@ app.delete('/todos/:id', (req, res) => {
   }
 
   // remove todo by id
-  Todo.findByIdAndRemove(id).then((doc) => {
-    if (!doc) {
+  Todo.findByIdAndRemove(id).then((todo) => {
+    if (!todo) {
       return res.status(404).send();
     }
 
-    res.status(200).send(doc);
+    res.status(200).send({todo});
   }).catch((e) => res.status(400).send());
     // success
       // check if document came back
