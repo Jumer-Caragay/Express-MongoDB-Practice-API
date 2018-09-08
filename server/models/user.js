@@ -40,7 +40,7 @@ UserSchema.methods.toJSON = function () { // controls what this user model retur
 };
 
 UserSchema.methods.generateAuthToken = function () {
-  let newUser = this;
+  let newUser = this; // instance methods are called with the individual document
   let access = 'auth';
   let token = jwt.sign({_id: newUser._id.toHexString(), access}, 'abc123').toString();
 
@@ -50,6 +50,23 @@ UserSchema.methods.generateAuthToken = function () {
     return token;
   })
 };
+
+UserSchema.statics.findByToken = function (token) {
+  let User = this; // model methods are called with the model name
+  let decoded;
+
+  try {
+    decoded = jwt.verify(token, 'abc123')
+  } catch (e) {
+     return Promise.reject();// the .then inside the server.js with the findByToken will not fire if reject receives paramaters it pops up as error
+  }
+
+  return User.findOne({
+    _id: decoded._id, // heymongodb look for the user with the _id given back from the token
+    'tokens.token': token, // also mongodb look inside the tokens property and look for a user with the same token passed from header
+    'tokens.access': 'auth' // also mongodb look for also a user with the token that has an access property with auth
+  }); // return the promise so we can tact the .then inside server.js
+}
 
 let User = mongoose.model('User', UserSchema);
 
