@@ -5,7 +5,7 @@ let authenticate = (req, res, next) => {
 
   User.findByToken(token).then((user) => {
     if(!user) { // the case scenario where the jwt was verified by couldn't find a user!
-      return Promise.reject();
+      return Promise.reject(); // runs the catch case
     }
 
     req.user = user;
