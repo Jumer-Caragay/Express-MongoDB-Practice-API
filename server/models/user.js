@@ -52,6 +52,16 @@ UserSchema.methods.generateAuthToken = function () {
   })
 };
 
+UserSchema.methods.removeToken = function (token) {
+  let user = this;
+
+  return user.update({
+    $pull: { // pull from the user object array and delete it
+      tokens: {token}
+    }
+  }) // return the promise to tact on .then
+};
+
 UserSchema.statics.findByToken = function (token) {
   let User = this; // model methods are called with the model name
   let decoded;
