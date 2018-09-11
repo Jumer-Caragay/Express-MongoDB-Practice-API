@@ -43,7 +43,7 @@ UserSchema.methods.toJSON = function () { // controls what this user model retur
 UserSchema.methods.generateAuthToken = function () {
   let newUser = this; // instance methods are called with the individual document
   let access = 'auth';
-  let token = jwt.sign({_id: newUser._id.toHexString(), access}, 'abc123').toString();
+  let token = jwt.sign({_id: newUser._id.toHexString(), access}, process.env.JWT_SECRET).toString();
 
   newUser.tokens = newUser.tokens.concat([{access, token}]); // push the token to tokens property
 
@@ -67,7 +67,7 @@ UserSchema.statics.findByToken = function (token) {
   let decoded;
 
   try {
-    decoded = jwt.verify(token, 'abc123')
+    decoded = jwt.verify(token, process.env.JWT_SECRET)
   } catch (e) {
      return Promise.reject();// the .then inside the server.js with the findByToken will not fire if reject receives paramaters it pops up as error
   }
